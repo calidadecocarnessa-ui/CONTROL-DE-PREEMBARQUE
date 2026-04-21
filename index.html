@@ -94,21 +94,6 @@
       background: #545b62;
     }
 
-    .mensaje {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 8px;
-      display: none;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .ok {
-      background: #dff3e3;
-      color: #1f6b2a;
-      border: 1px solid #b9e2c0;
-    }
-
     .foto-preview {
       margin-top: 10px;
       text-align: center;
@@ -135,8 +120,8 @@
       border: 1px solid #999;
       border-radius: 8px;
       background: white;
-      touch-action: none;
       display: block;
+      touch-action: none;
     }
 
     .firma-acciones {
@@ -169,7 +154,6 @@
     </div>
 
     <form id="formulario">
-
       <div class="fila">
         <div class="grupo">
           <label for="dia">Día</label>
@@ -194,19 +178,16 @@
         </div>
       </div>
 
-    
-<div class="fila">
-  <div class="grupo">
-    <label for="deposito_externo">Depósito externo</label>
-    
-    <input list="depositos" id="deposito_externo" name="deposito_externo" placeholder="Elegir o escribir">
-
-    <datalist id="depositos">
-      <option value="FRIODOCK">
-      <option value="DODERO">
-      <option value="AGRO">
-    </datalist>
-  </div>
+      <div class="fila">
+        <div class="grupo">
+          <label for="deposito_externo">Depósito externo</label>
+          <input list="depositos" id="deposito_externo" name="deposito_externo" placeholder="Elegir o escribir">
+          <datalist id="depositos">
+            <option value="FRIODOCK">
+            <option value="DODERO">
+            <option value="AGRO">
+          </datalist>
+        </div>
 
         <div class="grupo">
           <label for="exportador">Exportador</label>
@@ -218,20 +199,19 @@
           </select>
         </div>
       </div>
+
       <div class="fila">
         <div class="grupo">
           <label for="destino">Destino</label>
-
-<input list="destinos" id="destino" name="destino" placeholder="Elegir o escribir">
-
-<datalist id="destinos">
-  <option value="ALEMANIA">
-  <option value="CHINA">
-  <option value="ISRAEL">
-  <option value="HOLANDA">
-  <option value="PAISES BAJOS">
-  <option value="CANADA">
-</datalist>
+          <input list="destinos" id="destino" name="destino" placeholder="Elegir o escribir">
+          <datalist id="destinos">
+            <option value="ALEMANIA">
+            <option value="CHINA">
+            <option value="ISRAEL">
+            <option value="HOLANDA">
+            <option value="PAISES BAJOS">
+            <option value="CANADA">
+          </datalist>
         </div>
 
         <div class="grupo">
@@ -255,14 +235,12 @@
       <div class="fila">
         <div class="grupo">
           <label for="responsable">Quién realizó el preembarque</label>
- 
-<input list="responsables" id="responsable" name="responsable" placeholder="Elegir o escribir">
-
-<datalist id="responsables">
-  <option value="AXEL ALVAREZ">
-  <option value="WALTER CANSECO">
-  <option value="DILAN ESCOBAR">
-</datalist>
+          <input list="responsables" id="responsable" name="responsable" placeholder="Elegir o escribir">
+          <datalist id="responsables">
+            <option value="AXEL ALVAREZ">
+            <option value="WALTER CANSECO">
+            <option value="DILAN ESCOBAR">
+          </datalist>
         </div>
 
         <div class="grupo">
@@ -295,42 +273,49 @@
       </div>
 
       <button type="submit" class="boton">Guardar</button>
-
-      <div id="mensajeOk" class="mensaje ok">
-        Registro guardado correctamente
-      </div>
     </form>
   </div>
 
   <script>
-    function completarDiaYHora() {
-      const ahora = new Date();
-      const dias = [
-        "DOMINGO", "LUNES", "MARTES", "MIERCOLES",
-        "JUEVES", "VIERNES", "SABADO"
-      ];
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxpss3lkYmrwuUc4ljiIfo_Cp90dkX1EFB1JW-aXjFd0RRyiwr8kOLsfYJCe1BSbktl/exec";
 
-      const dia = dias[ahora.getDay()];
+    function completarHoraInicio() {
+      const ahora = new Date();
       const hora = ahora.toLocaleTimeString("es-AR", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false
       });
-
-      document.getElementById("dia").value = dia;
       document.getElementById("hora_inicio").value = hora;
     }
 
-    function ponerFechaHoy() {
-      const hoy = new Date();
-      const yyyy = hoy.getFullYear();
-      const mm = String(hoy.getMonth() + 1).padStart(2, "0");
-      const dd = String(hoy.getDate()).padStart(2, "0");
-      document.getElementById("fecha_carga").value = `${yyyy}-${mm}-${dd}`;
+    function actualizarDiaDesdeFecha() {
+      const valorFecha = document.getElementById("fecha_carga").value;
+      const campoDia = document.getElementById("dia");
+
+      if (!valorFecha) {
+        campoDia.value = "";
+        return;
+      }
+
+      const partes = valorFecha.split("-");
+      const fechaLocal = new Date(
+        Number(partes[0]),
+        Number(partes[1]) - 1,
+        Number(partes[2])
+      );
+
+      const dias = [
+        "DOMINGO", "LUNES", "MARTES", "MIERCOLES",
+        "JUEVES", "VIERNES", "SABADO"
+      ];
+
+      campoDia.value = dias[fechaLocal.getDay()];
     }
 
-    completarDiaYHora();
-    ponerFechaHoy();
+    completarHoraInicio();
+
+    document.getElementById("fecha_carga").addEventListener("change", actualizarDiaDesdeFecha);
 
     const inputFoto = document.getElementById("foto");
     const previewFoto = document.getElementById("previewFoto");
@@ -338,6 +323,7 @@
 
     inputFoto.addEventListener("change", function() {
       const archivo = this.files[0];
+
       if (!archivo) {
         previewFoto.style.display = "none";
         previewFoto.src = "";
@@ -358,140 +344,99 @@
     const ctx = canvas.getContext("2d");
     let dibujando = false;
     let huboFirma = false;
+    let ultimoX = 0;
+    let ultimoY = 0;
 
     function ajustarCanvas() {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = 220;
+
+      canvas.width = rect.width * ratio;
+      canvas.height = 220 * ratio;
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(ratio, ratio);
+
       ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 2;
+      ctx.fillRect(0, 0, rect.width, 220);
+      ctx.lineWidth = 2.5;
       ctx.lineCap = "round";
+      ctx.lineJoin = "round";
       ctx.strokeStyle = "#000000";
+
       huboFirma = false;
     }
 
-    ajustarCanvas();
-    window.addEventListener("resize", ajustarCanvas);
-
     function obtenerPosicion(evento) {
       const rect = canvas.getBoundingClientRect();
-      let clientX, clientY;
-
-      if (evento.touches && evento.touches.length > 0) {
-        clientX = evento.touches[0].clientX;
-        clientY = evento.touches[0].clientY;
-      } else {
-        clientX = evento.clientX;
-        clientY = evento.clientY;
-      }
-
       return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
+        x: evento.clientX - rect.left,
+        y: evento.clientY - rect.top
       };
     }
 
     function iniciarDibujo(evento) {
       dibujando = true;
       const pos = obtenerPosicion(evento);
+      ultimoX = pos.x;
+      ultimoY = pos.y;
+
       ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      evento.preventDefault();
+      ctx.moveTo(ultimoX, ultimoY);
     }
 
     function dibujar(evento) {
       if (!dibujando) return;
+
       const pos = obtenerPosicion(evento);
+      ctx.beginPath();
+      ctx.moveTo(ultimoX, ultimoY);
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
+
+      ultimoX = pos.x;
+      ultimoY = pos.y;
       huboFirma = true;
-      evento.preventDefault();
     }
 
-    function terminarDibujo(evento) {
-      if (!dibujando) return;
+    function terminarDibujo() {
       dibujando = false;
-      evento.preventDefault();
     }
 
-    canvas.addEventListener("mousedown", iniciarDibujo);
-    canvas.addEventListener("mousemove", dibujar);
-    canvas.addEventListener("mouseup", terminarDibujo);
-    canvas.addEventListener("mouseleave", terminarDibujo);
+    ajustarCanvas();
+    window.addEventListener("resize", ajustarCanvas);
 
-    canvas.addEventListener("touchstart", iniciarDibujo, { passive: false });
-    canvas.addEventListener("touchmove", dibujar, { passive: false });
-    canvas.addEventListener("touchend", terminarDibujo, { passive: false });
+    canvas.addEventListener("pointerdown", function(e) {
+      e.preventDefault();
+      canvas.setPointerCapture(e.pointerId);
+      iniciarDibujo(e);
+    });
+
+    canvas.addEventListener("pointermove", function(e) {
+      e.preventDefault();
+      dibujar(e);
+    });
+
+    canvas.addEventListener("pointerup", function(e) {
+      e.preventDefault();
+      terminarDibujo();
+    });
+
+    canvas.addEventListener("pointercancel", function(e) {
+      e.preventDefault();
+      terminarDibujo();
+    });
+
+    canvas.addEventListener("pointerleave", function(e) {
+      e.preventDefault();
+      terminarDibujo();
+    });
 
     document.getElementById("limpiarFirma").addEventListener("click", function() {
       ajustarCanvas();
     });
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwrDiOkdDbXBHqF1N4kgHmkKAfCuEYPSM6oe2-Ysl_41DzXtzsU4DmWd-P2O-hBBYAt/exec";
-
-document.getElementById("formulario").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const totalCajas = Number(document.getElementById("total_cajas").value || 0);
-  const cajasMuestreadas = Number(document.getElementById("cajas_muestreadas").value || 0);
-
-  if (cajasMuestreadas > totalCajas && totalCajas > 0) {
-    alert("La cantidad de cajas muestreadas no puede ser mayor al total de cajas.");
-    return;
-  }
-
-  const firmaBase64 = huboFirma ? canvas.toDataURL("image/png") : "";
-
-  const datos = {
-    dia: document.getElementById("dia").value,
-    hora_inicio: document.getElementById("hora_inicio").value,
-    fecha_carga: document.getElementById("fecha_carga").value,
-    n_venta: document.getElementById("n_venta").value,
-    deposito_externo: document.getElementById("deposito_externo").value,
-    exportador: document.getElementById("exportador").value,
-    destino: document.getElementById("destino").value,
-    total_cajas: document.getElementById("total_cajas").value,
-    contenedor_patente: document.getElementById("contenedor_patente").value,
-    temperatura_promedio: document.getElementById("temperatura_promedio").value,
-    observaciones: document.getElementById("observaciones").value,
-    responsable: document.getElementById("responsable").value,
-    cajas_muestreadas: document.getElementById("cajas_muestreadas").value,
-    foto: fotoBase64,
-    firma: firmaBase64
-  };
-
-  try {
-    const respuesta = await fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(datos),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const resultado = await respuesta.json();
-
-    if (resultado.result === "success") {
-      alert("Registro guardado en Excel ✔");
-
-      this.reset();
-      completarDiaYHora();
-      ponerFechaHoy();
-
-      previewFoto.src = "";
-      previewFoto.style.display = "none";
-      fotoBase64 = "";
-      ajustarCanvas();
-    } else {
-      alert("Error: " + resultado.message);
-    }
-
-  } catch (error) {
-    alert("Error de conexión con Sheets");
-    console.error(error);
-  }
-});
+    document.getElementById("formulario").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const totalCajas = Number(document.getElementById("total_cajas").value || 0);
@@ -501,6 +446,13 @@ document.getElementById("formulario").addEventListener("submit", async function(
         alert("La cantidad de cajas muestreadas no puede ser mayor al total de cajas.");
         return;
       }
+
+      if (!document.getElementById("fecha_carga").value) {
+        alert("Completá la fecha de la carga.");
+        return;
+      }
+
+      actualizarDiaDesdeFecha();
 
       const firmaBase64 = huboFirma ? canvas.toDataURL("image/png") : "";
 
@@ -522,23 +474,36 @@ document.getElementById("formulario").addEventListener("submit", async function(
         firma: firmaBase64
       };
 
-      console.log("Datos capturados:", datos);
+      try {
+        const respuesta = await fetch(scriptURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(datos)
+        });
 
-      const mensaje = document.getElementById("mensajeOk");
-      mensaje.style.display = "block";
+        const resultado = await respuesta.json();
 
-      this.reset();
-      completarDiaYHora();
-      ponerFechaHoy();
+        if (resultado.result === "success") {
+          alert("Registro guardado en Excel ✔");
 
-      previewFoto.src = "";
-      previewFoto.style.display = "none";
-      fotoBase64 = "";
-      ajustarCanvas();
+          this.reset();
+          document.getElementById("dia").value = "";
+          completarHoraInicio();
 
-      setTimeout(() => {
-        mensaje.style.display = "none";
-      }, 2000);
+          previewFoto.src = "";
+          previewFoto.style.display = "none";
+          fotoBase64 = "";
+          ajustarCanvas();
+        } else {
+          alert("Error: " + resultado.message);
+        }
+
+      } catch (error) {
+        alert("Error de conexión con Sheets");
+        console.error(error);
+      }
     });
   </script>
 </body>
