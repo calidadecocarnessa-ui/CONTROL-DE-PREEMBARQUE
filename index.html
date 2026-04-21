@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Preembarque</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .contenedor {
+      max-width: 850px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    .encabezado {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .encabezado img {
+      width: 120px;
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #1f3b5b;
+    }
+
+    .grupo {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cfd6dd;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .boton {
+      width: 100%;
+      background: #1f6fb2;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .boton:hover {
+      background: #17578c;
+    }
+
+    .boton-secundario {
+      background: #6c757d;
+      margin-top: 8px;
+    }
+
+    .boton-secundario:hover {
+      background: #545b62;
+    }
+
+    .mensaje {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .ok {
+      background: #dff3e3;
+      color: #1f6b2a;
+      border: 1px solid #b9e2c0;
+    }
+
+    .foto-preview {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .foto-preview img {
+      max-width: 100%;
+      max-height: 300px;
+      border: 1px solid #cfd6dd;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .firma-box {
+      border: 1px solid #cfd6dd;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fafafa;
+    }
+
+    canvas {
+      width: 100%;
+      height: 220px;
+      border: 1px solid #999;
+      border-radius: 8px;
+      background: white;
+      touch-action: none;
+      display: block;
+    }
+
+    .firma-acciones {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .firma-acciones button {
+      flex: 1;
+    }
+
+    @media (max-width: 700px) {
+      .fila {
+        grid-template-columns: 1fr;
+      }
+
+      .firma-acciones {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <div class="encabezado">
+      <img src="logo.png" alt="Logo">
+      <h1>Control de Preembarque</h1>
+    </div>
+
+    <form id="formulario">
+
+      <div class="fila">
+        <div class="grupo">
+          <label for="dia">Día</label>
+          <input type="text" id="dia" name="dia" readonly>
+        </div>
+
+        <div class="grupo">
+          <label for="hora_inicio">Hora de inicio</label>
+          <input type="text" id="hora_inicio" name="hora_inicio" readonly>
+        </div>
+      </div>
+
+      <div class="fila">
+        <div class="grupo">
+          <label for="fecha_carga">Fecha de la carga</label>
+          <input type="date" id="fecha_carga" name="fecha_carga" required>
+        </div>
+
+        <div class="grupo">
+          <label for="n_venta">N° Venta</label>
+          <input type="text" id="n_venta" name="n_venta">
+        </div>
+      </div>
+
+    
+<div class="fila">
+  <div class="grupo">
+    <label for="deposito_externo">Depósito externo</label>
+    
+    <input list="depositos" id="deposito_externo" name="deposito_externo" placeholder="Elegir o escribir">
+
+    <datalist id="depositos">
+      <option value="FRIODOCK">
+      <option value="DODERO">
+      <option value="AGRO">
+    </datalist>
+  </div>
+
+        <div class="grupo">
+          <label for="exportador">Exportador</label>
+          <select id="exportador" name="exportador">
+            <option value=""></option>
+            <option value="ECOCARNES">ECOCARNES</option>
+            <option value="VIANDE">VIANDE</option>
+            <option value="AMBAS">AMBAS</option>
+          </select>
+        </div>
+      </div>
+      <div class="fila">
+        <div class="grupo">
+          <label for="destino">Destino</label>
+
+<input list="destinos" id="destino" name="destino" placeholder="Elegir o escribir">
+
+<datalist id="destinos">
+  <option value="ALEMANIA">
+  <option value="CHINA">
+  <option value="ISRAEL">
+  <option value="HOLANDA">
+  <option value="PAISES BAJOS">
+  <option value="CANADA">
+</datalist>
+        </div>
+
+        <div class="grupo">
+          <label for="total_cajas">Total de cajas</label>
+          <input type="number" id="total_cajas" name="total_cajas" min="0">
+        </div>
+      </div>
+
+      <div class="fila">
+        <div class="grupo">
+          <label for="contenedor_patente">N° Contenedor / Patente</label>
+          <input type="text" id="contenedor_patente" name="contenedor_patente">
+        </div>
+
+        <div class="grupo">
+          <label for="temperatura_promedio">T° Promedio</label>
+          <input type="number" step="0.1" id="temperatura_promedio" name="temperatura_promedio">
+        </div>
+      </div>
+
+      <div class="fila">
+        <div class="grupo">
+          <label for="responsable">Quién realizó el preembarque</label>
+ 
+<input list="responsables" id="responsable" name="responsable" placeholder="Elegir o escribir">
+
+<datalist id="responsables">
+  <option value="AXEL ALVAREZ">
+  <option value="WALTER CANSECO">
+  <option value="DILAN ESCOBAR">
+</datalist>
+        </div>
+
+        <div class="grupo">
+          <label for="cajas_muestreadas">Cantidad de cajas muestreadas</label>
+          <input type="number" id="cajas_muestreadas" name="cajas_muestreadas" min="0">
+        </div>
+      </div>
+
+      <div class="grupo">
+        <label for="observaciones">Observaciones</label>
+        <textarea id="observaciones" name="observaciones"></textarea>
+      </div>
+
+      <div class="grupo">
+        <label for="foto">Foto</label>
+        <input type="file" id="foto" name="foto" accept="image/*" capture="environment">
+        <div class="foto-preview">
+          <img id="previewFoto" alt="Vista previa de foto">
+        </div>
+      </div>
+
+      <div class="grupo">
+        <label>Firma digital</label>
+        <div class="firma-box">
+          <canvas id="canvasFirma"></canvas>
+          <div class="firma-acciones">
+            <button type="button" class="boton boton-secundario" id="limpiarFirma">Limpiar firma</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="boton">Guardar</button>
+
+      <div id="mensajeOk" class="mensaje ok">
+        Registro guardado correctamente
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function completarDiaYHora() {
+      const ahora = new Date();
+      const dias = [
+        "DOMINGO", "LUNES", "MARTES", "MIERCOLES",
+        "JUEVES", "VIERNES", "SABADO"
+      ];
+
+      const dia = dias[ahora.getDay()];
+      const hora = ahora.toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+
+      document.getElementById("dia").value = dia;
+      document.getElementById("hora_inicio").value = hora;
+    }
+
+    function ponerFechaHoy() {
+      const hoy = new Date();
+      const yyyy = hoy.getFullYear();
+      const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+      const dd = String(hoy.getDate()).padStart(2, "0");
+      document.getElementById("fecha_carga").value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    completarDiaYHora();
+    ponerFechaHoy();
+
+    const inputFoto = document.getElementById("foto");
+    const previewFoto = document.getElementById("previewFoto");
+    let fotoBase64 = "";
+
+    inputFoto.addEventListener("change", function() {
+      const archivo = this.files[0];
+      if (!archivo) {
+        previewFoto.style.display = "none";
+        previewFoto.src = "";
+        fotoBase64 = "";
+        return;
+      }
+
+      const lector = new FileReader();
+      lector.onload = function(e) {
+        previewFoto.src = e.target.result;
+        previewFoto.style.display = "block";
+        fotoBase64 = e.target.result;
+      };
+      lector.readAsDataURL(archivo);
+    });
+
+    const canvas = document.getElementById("canvasFirma");
+    const ctx = canvas.getContext("2d");
+    let dibujando = false;
+    let huboFirma = false;
+
+    function ajustarCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = 220;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000000";
+      huboFirma = false;
+    }
+
+    ajustarCanvas();
+    window.addEventListener("resize", ajustarCanvas);
+
+    function obtenerPosicion(evento) {
+      const rect = canvas.getBoundingClientRect();
+      let clientX, clientY;
+
+      if (evento.touches && evento.touches.length > 0) {
+        clientX = evento.touches[0].clientX;
+        clientY = evento.touches[0].clientY;
+      } else {
+        clientX = evento.clientX;
+        clientY = evento.clientY;
+      }
+
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function iniciarDibujo(evento) {
+      dibujando = true;
+      const pos = obtenerPosicion(evento);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      evento.preventDefault();
+    }
+
+    function dibujar(evento) {
+      if (!dibujando) return;
+      const pos = obtenerPosicion(evento);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+      huboFirma = true;
+      evento.preventDefault();
+    }
+
+    function terminarDibujo(evento) {
+      if (!dibujando) return;
+      dibujando = false;
+      evento.preventDefault();
+    }
+
+    canvas.addEventListener("mousedown", iniciarDibujo);
+    canvas.addEventListener("mousemove", dibujar);
+    canvas.addEventListener("mouseup", terminarDibujo);
+    canvas.addEventListener("mouseleave", terminarDibujo);
+
+    canvas.addEventListener("touchstart", iniciarDibujo, { passive: false });
+    canvas.addEventListener("touchmove", dibujar, { passive: false });
+    canvas.addEventListener("touchend", terminarDibujo, { passive: false });
+
+    document.getElementById("limpiarFirma").addEventListener("click", function() {
+      ajustarCanvas();
+    });
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwrDiOkdDbXBHqF1N4kgHmkKAfCuEYPSM6oe2-Ysl_41DzXtzsU4DmWd-P2O-hBBYAt/exec";
+
+document.getElementById("formulario").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const totalCajas = Number(document.getElementById("total_cajas").value || 0);
+  const cajasMuestreadas = Number(document.getElementById("cajas_muestreadas").value || 0);
+
+  if (cajasMuestreadas > totalCajas && totalCajas > 0) {
+    alert("La cantidad de cajas muestreadas no puede ser mayor al total de cajas.");
+    return;
+  }
+
+  const firmaBase64 = huboFirma ? canvas.toDataURL("image/png") : "";
+
+  const datos = {
+    dia: document.getElementById("dia").value,
+    hora_inicio: document.getElementById("hora_inicio").value,
+    fecha_carga: document.getElementById("fecha_carga").value,
+    n_venta: document.getElementById("n_venta").value,
+    deposito_externo: document.getElementById("deposito_externo").value,
+    exportador: document.getElementById("exportador").value,
+    destino: document.getElementById("destino").value,
+    total_cajas: document.getElementById("total_cajas").value,
+    contenedor_patente: document.getElementById("contenedor_patente").value,
+    temperatura_promedio: document.getElementById("temperatura_promedio").value,
+    observaciones: document.getElementById("observaciones").value,
+    responsable: document.getElementById("responsable").value,
+    cajas_muestreadas: document.getElementById("cajas_muestreadas").value,
+    foto: fotoBase64,
+    firma: firmaBase64
+  };
+
+  try {
+    const respuesta = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify(datos),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const resultado = await respuesta.json();
+
+    if (resultado.result === "success") {
+      alert("Registro guardado en Excel ✔");
+
+      this.reset();
+      completarDiaYHora();
+      ponerFechaHoy();
+
+      previewFoto.src = "";
+      previewFoto.style.display = "none";
+      fotoBase64 = "";
+      ajustarCanvas();
+    } else {
+      alert("Error: " + resultado.message);
+    }
+
+  } catch (error) {
+    alert("Error de conexión con Sheets");
+    console.error(error);
+  }
+});
+      e.preventDefault();
+
+      const totalCajas = Number(document.getElementById("total_cajas").value || 0);
+      const cajasMuestreadas = Number(document.getElementById("cajas_muestreadas").value || 0);
+
+      if (cajasMuestreadas > totalCajas && totalCajas > 0) {
+        alert("La cantidad de cajas muestreadas no puede ser mayor al total de cajas.");
+        return;
+      }
+
+      const firmaBase64 = huboFirma ? canvas.toDataURL("image/png") : "";
+
+      const datos = {
+        dia: document.getElementById("dia").value,
+        hora_inicio: document.getElementById("hora_inicio").value,
+        fecha_carga: document.getElementById("fecha_carga").value,
+        n_venta: document.getElementById("n_venta").value,
+        deposito_externo: document.getElementById("deposito_externo").value,
+        exportador: document.getElementById("exportador").value,
+        destino: document.getElementById("destino").value,
+        total_cajas: document.getElementById("total_cajas").value,
+        contenedor_patente: document.getElementById("contenedor_patente").value,
+        temperatura_promedio: document.getElementById("temperatura_promedio").value,
+        observaciones: document.getElementById("observaciones").value,
+        responsable: document.getElementById("responsable").value,
+        cajas_muestreadas: document.getElementById("cajas_muestreadas").value,
+        foto: fotoBase64,
+        firma: firmaBase64
+      };
+
+      console.log("Datos capturados:", datos);
+
+      const mensaje = document.getElementById("mensajeOk");
+      mensaje.style.display = "block";
+
+      this.reset();
+      completarDiaYHora();
+      ponerFechaHoy();
+
+      previewFoto.src = "";
+      previewFoto.style.display = "none";
+      fotoBase64 = "";
+      ajustarCanvas();
+
+      setTimeout(() => {
+        mensaje.style.display = "none";
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
